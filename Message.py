@@ -72,6 +72,10 @@ class Message:
     #     print(txt.get_payload(decode=True))
 
 #USE MMS TO SEND NON FORMATTED TEXTS
+
+#This works now
+
+
 if __name__ == "__main__":
     msg = Message()
     #msg.alert("HElo ’ he",'4088588974@mms.att.net')
