@@ -1,7 +1,14 @@
 from Twitter import Tweet
 import smtplib
 from email.message import EmailMessage
+import email
 import configparser
+import ssl
+
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.mime.base import MIMEBase
+from email import encoders
 
 class Message:
     def __init__(self) -> None:
@@ -12,24 +19,61 @@ class Message:
         self.user = config['message']['user']
         self.pw = config['message']['pw']
 
-    def alert(self, body, to):
-        msg = EmailMessage()
-        msg.set_content(body)
-        msg['to'] = to
+    def send_message(self, body, to):
+        msg = MIMEMultipart()
+        msg['To'] = to
+        msg['From'] = self.user
 
-        server = smtplib.SMTP('smtp.gmail.com', 587)
-        server.starttls()
+        msg.attach(MIMEText(body))
+
+        server = smtplib.SMTP_SSL('smtp.gmail.com', 465, context=ssl.create_default_context())
         server.login(self.user, self.pw)
         server.send_message(msg)
 
         server.quit()
 
-    def tweetMsg(self, to):
-        text = self.tweet.get_tweet('valkyrae')
-        self.alert(text, to)
+    def send_file(self, file, to, mime_main, mime_sub):
+        msg = MIMEMultipart()
+        msg['To'] = to
+        msg['From'] = self.user
 
+        with open(file, "rb") as pic:
+            part = MIMEBase(mime_main, mime_sub)
+            part.set_payload(pic.read)
+            encoders.encode_base64(part)
+        
+            msg.attach(part)
+        
+        server = smtplib.SMTP_SSL('smtp.gmail.com', 465, context=ssl.create_default_context())
+        server.login(self.user, self.pw)
+        server.sendmail(self.user, to, msg.as_string())
+
+    def tweetMsg(self, to):
+        text = self.tweet.get_tweet('tylerperry')
+        self.send_message(text[0], to)
+        if(text[1] != None):
+            self.send_file(text[1], to, 'image', 'jpeg')
+
+    # def getResponse(self):
+    #     host = 'imap.gmail.com'
+        
+    #     mail = imaplib.IMAP4_SSL(host)
+    #     mail.login(self.user, self.pw)
+
+    #     mail.select("inbox")
+
+    #     result, data = mail.uid('search', None, "ALL")
+    #     inbox = data[0].split()
+    #     newest = inbox[-1]
+
+    #     email_msg = mail.uid('fetch', newest, "(RFC822)")
+    #     msg = email_msg[1][0][1].decode("utf-8")
+    #     txt = email.message_from_string(msg)
+    #     print(txt.get_payload(decode=True))
+
+#USE MMS TO SEND NON FORMATTED TEXTS
 if __name__ == "__main__":
     msg = Message()
-    msg.alert('Hiiii!!! Little update! Filming rn but after Im done Im heading over to hasan’s around 3ish pm PT to play poppy playtime then Ill be live on my channel at 6ish pm PT for games with fuslie, rated and taco','4088588974@txt.att.net')
-    #msg.tweetMsg("kylecarbonell13@gmail.com")
-    #msg.tweetMsg('4088588974@txt.att.net')
+    #msg.alert("HElo ’ he",'4088588974@mms.att.net')
+    msg.tweetMsg("kylecarbonell13@gmail.com")
+    #msg.tweetMsg('4088588974@mms.att.net')
