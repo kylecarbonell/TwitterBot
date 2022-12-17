@@ -5,6 +5,8 @@ import pandas as pd
 import emoji
 import demoji
 
+import json
+
 class Tweet:
     def __init__(self) -> None:
         config = configparser.ConfigParser()
@@ -23,28 +25,26 @@ class Tweet:
 
         self.api = tweepy.API(auth)
 
-        self.notAllowed = {"’" : "'"}
 
 
     def get_tweet(self, name):
         tweets = self.api.user_timeline(screen_name =name, count=1, tweet_mode='extended')
-        #columns = ['User', 'Text', 'Time Created']
-        data = []
-        for tweet in tweets:
-            data.append(tweet.full_text)
+        tweet = tweets[0]
+        #print(tweet)
 
-        msg = "".join(data)
-        for char in self.notAllowed:
-            msg = msg.replace(char , self.notAllowed[char])
+        msg = "\n".join(["@" + tweet.user.screen_name + ":", tweet.full_text])
+    
+        if 'https' in msg:
+            msg = msg[0 : msg.index('https')-1]
+            if 'media' in tweet.entities:
+                for image in tweet.entities['media']:
+                    url = (image['media_url'])
+            
+        print(msg)
+        return [msg, url]
 
-        emojis = demoji.findall(msg)
-        keys = list(emojis.keys())
-        val = list(emojis.values())
-
-        for i in range(len(keys)):
-            msg = msg.replace(keys[i], '(' + val[i] + ')')
-        
-        return msg
+    def get_image(self, file):
+        pass
 
     def get_news(self):
         tweets = self.api.user_timeline(screen_name ='CNN', count=5)
