@@ -30,17 +30,14 @@ class Tweet:
     def get_tweet(self, name):
         tweets = self.api.user_timeline(screen_name =name, count=1, tweet_mode='extended')
         tweet = tweets[0]
-        #print(tweet)
 
         msg = "\n".join(["@" + tweet.user.screen_name + ":", tweet.full_text])
-    
+        url = None
         if 'https' in msg:
             msg = msg[0 : msg.index('https')-1]
             if 'media' in tweet.entities:
                 for image in tweet.entities['media']:
                     url = (image['media_url'])
-            
-        print(msg)
         return [msg, url]
 
     def get_image(self, file):
