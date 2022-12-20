@@ -1,0 +1,7 @@
+{
+    "PROVIDERS" : {
+        "att" : "@att.mms.net",
+        "t-mobile" : "@tmomail.net",
+        "verizon" : "@vzwpix.com"
+    }
+}

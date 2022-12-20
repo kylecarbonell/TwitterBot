@@ -40,16 +40,5 @@ class Tweet:
                     url = (image['media_url'])
         return [msg, url]
 
-    def get_image(self, file):
-        pass
 
-    def get_news(self):
-        tweets = self.api.user_timeline(screen_name ='CNN', count=5)
-        columns = ['User', 'Text', 'Time Created']
-        data = []
-        for tweet in tweets:
-            data.append([tweet.user.screen_name, tweet.text, tweet.created_at])
-
-        df = pd.DataFrame(data, columns=columns)
-        print(df)
 

@@ -1,0 +1,16 @@
+{
+    "Providers": {
+        "att": "@att.mms.net",
+        "t-mobile": "@tmomail.net",
+        "verizon": "@vzwpix.com",
+        "gmail": "@gmail.com"
+    },
+    "Users": [
+        {
+            "name": "Kyle",
+            "email": "kylecarbonell13@gmail.com",
+            "phone_number": "12345678",
+            "provider": "att"
+        }
+    ]
+}
