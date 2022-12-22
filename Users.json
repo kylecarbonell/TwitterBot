@@ -1,16 +1,28 @@
 {
-    "Providers": {
-        "att": "@att.mms.net",
-        "t-mobile": "@tmomail.net",
-        "verizon": "@vzwpix.com",
-        "gmail": "@gmail.com"
-    },
-    "Users": [
-        {
-            "name": "Kyle",
-            "email": "kylecarbonell13@gmail.com",
-            "phone_number": "12345678",
-            "provider": "att"
+    "Users": {
+        "4088588974@mms.att.net" : {
+            "email": "",
+            "name" : "Kyle Carbonell",
+            "reminders" : [
+                {
+                    "reminder" : "Take pills",
+                    "time" : "22:20"
+                },
+                {
+                    "reminder" : "Go to bed",
+                    "time" : "22:44"
+                }
+            ]
+        },
+        "4088217491@mms.att.net" : {
+            "email" : "",
+            "name" : "Shirley Nguyen",
+            "reminders" : [
+                {
+                    "reminder" : "Take a poop",
+                    "time" : "22:44"
+                }
+            ]
         }
-    ]
+    }
 }

@@ -1,0 +1,19 @@
+{
+    "User_Reminders":{
+        "kyle" : {
+            "reminders" : [
+                {
+                    "reminder" : "Take pills",
+                    "time" : "9:33 PM"
+                },
+                {
+                    "reminder" : "Go to bed",
+                    "time" : "10:00 PM"
+                }
+            ]
+        },
+        "bob" : {
+            
+        }
+    }
+}

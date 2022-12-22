@@ -1,11 +1,5 @@
 import configparser
-from re import T
 import tweepy
-import pandas as pd
-import emoji
-import demoji
-
-import json
 
 class Tweet:
     def __init__(self) -> None:
@@ -25,9 +19,13 @@ class Tweet:
 
         self.api = tweepy.API(auth)
 
+    def get_tweet(self, name: str) -> tuple:
+        '''
+        This is returns the most recent tweet from the given name. If the tweet 
+        contains an image, it will also return the link to the image
 
-
-    def get_tweet(self, name):
+        @param name: Name of the twitter user
+        '''
         tweets = self.api.user_timeline(screen_name =name, count=1, tweet_mode='extended')
         tweet = tweets[0]
 
