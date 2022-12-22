@@ -1,26 +1,12 @@
 {
     "Users": {
-        "4088588974@mms.att.net" : {
+        "4088588974@mms.att.net": {
+            "name": "Kyle Carbonell",
             "email": "",
-            "name" : "Kyle Carbonell",
-            "reminders" : [
+            "reminders": [
                 {
-                    "reminder" : "Take pills",
-                    "time" : "22:20"
-                },
-                {
-                    "reminder" : "Go to bed",
-                    "time" : "22:44"
-                }
-            ]
-        },
-        "4088217491@mms.att.net" : {
-            "email" : "",
-            "name" : "Shirley Nguyen",
-            "reminders" : [
-                {
-                    "reminder" : "Take a poop",
-                    "time" : "22:44"
+                    "reminder": "working p2",
+                    "time": "23:18"
                 }
             ]
         }

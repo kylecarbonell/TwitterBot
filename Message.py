@@ -157,11 +157,11 @@ class Message:
         @param phone_number: This is the users phone number
         @param email: This is the users email
         '''
-        new_user = {'name' : name, 'email' : email, 'phone_number' : phone_number}
-        self.send_message("Creating your account...", to)
+        new_user = {'name' : name, 'email' : email, "reminders" : [] }
+        self.send_message("Creating your account...", phone_number)
         with open('Users.json', 'r+') as js:
             file = json.load(js)
-            file['Users'].append(new_user)
+            file['Users'][phone_number] = new_user
             js.seek(0)
             json.dump(file, js, indent=4)
         self.recipients.append(phone_number)
@@ -178,9 +178,9 @@ class Message:
         if any(word in command for word in ['Help', 'help']):
             options = "1. To get the current news \n2. To get a random Tweet\n3. Type @ and a twitter username to get their tweet"
             self.send_message(options, to)
-        elif any(word in command for word in ['1', 'News', 'News']):
+        elif any(word in command for word in ['News', 'news']):
             self.tweetMsg(to, "CNN")
-        elif any(word in command for word in ['2', '@']):
+        elif any(word in command for word in ['@']):
             self.tweetMsg(to, command.partition('@')[2])
         elif any(word in command for word in ['Exit', 'Quit', 'exit', 'quit']):
             self.send_message("Thank you for using Alert Bot! See you next time!", to)
@@ -189,15 +189,17 @@ class Message:
             info = command.split("\n")
             info.append("")
             self.add_user(info[1], to, info[2])
+        elif any(word in command for word in ["reminder", "Reminder"]):
+            self.send_message("Adding reminder...", to)
+            info = command.split("\n")
+            self.reminder.add_reminder(info[1], info[2], to)
+            self.send_message("Reminder created!", to)
         else:
             self.send_message("Alert bot does not understand this command", to)
 
     def run_response(self):
-        self.send_message("Alert Bot is now on!", ', '.join(self.recipients))
-        time.sleep(3)
         while self.running:
             time.sleep(3)
-            print("here")
             res = self.getResponse()
             to = res[1]
             message = res[0]
@@ -206,8 +208,10 @@ class Message:
 
     def run_reminders(self):
         while self.running:
+            print("Sending all reminders")
             #List of tuples of [Reminder list, phone number]
             reminders = self.reminder.send_reminder(self.recipients)
+            print(reminders)
             #Loops for each tuple(reminder = [reminder, phone number])
             for reminder in reminders:
                 self.send_message(reminder[0], reminder[1])

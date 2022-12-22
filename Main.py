@@ -15,7 +15,7 @@ if __name__ == "__main__":
     print("Time ", time.strftime('%H:%M'))
     user_response = mp.Process(target=msg.run_response)
     test_process = mp.Process(target=msg.run_reminders)
-    #user_response.start()
+    user_response.start()
     test_process.start()
 
 
