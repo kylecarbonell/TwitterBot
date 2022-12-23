@@ -43,6 +43,9 @@ class Reminder:
             js.seek(0)
             json.dump(file, js, indent=4)
 
+    def delete_reminder(self):
+        pass
+
     def format_time(self, time : str) -> str:
         formatted_time = time.partition(":")
         no_space = formatted_time[2].partition(" ")[0]

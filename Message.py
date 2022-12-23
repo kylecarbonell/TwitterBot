@@ -184,8 +184,8 @@ class Message:
             options =   "@Help:\n" \
                         "1. Type '@News' to get the current news\n\n" \
                         "2. Type @ and a twitter username to get their recent tweet\n\n" \
-                        "3. Type '@Reminder' followed by your reminder and the time (03:20 am/pm) on 2 separate lines.\n"\
-                        "\n---------------------------------\n"\
+                        "3. Type '@Reminder' followed by your reminder and the time (03:20 am/pm) on 2 separate lines.\n\n"\
+                        "---------------------------------\n\n"\
                         "4. Type 'GET reminders' to get all your reminders"
             self.send_message(options, to)
         #Sends news from @cnn
@@ -198,7 +198,7 @@ class Message:
                 info.append("")
                 self.add_user(info[1], to, info[2])
             else:
-                self.send_message("@ERROR:\nCommand does not contain your name or your email!")
+                self.send_message("@ERROR:\nCommand does not contain your name or your email!", to)
                 self.run_command('help', to)
         #Gets all users reminders
         elif any(word in command for word in ['reminder', 'Reminder', 'reminders', 'Reminders']) and any(word in command for word in ["GET", "Get", "get"]):
@@ -210,7 +210,7 @@ class Message:
                 self.reminder.add_reminder(info[1], info[2], to)
                 self.send_message("Reminder created!", to)
             else:
-                self.send_message("@ERROR:\nCommand does not contain the reminder or the time!")
+                self.send_message("@ERROR:\nCommand does not contain the reminder or the time!", to)
                 self.run_command('help', to)
         #Sends latest tweet from the whoever the user @
         elif any(word in command for word in ['@']):
