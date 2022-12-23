@@ -4,7 +4,7 @@ import tweepy
 class Tweet:
     def __init__(self) -> None:
         config = configparser.ConfigParser()
-        config.read('config.ini')
+        config.read('Data/config.ini')
 
         #Get keys from config.ini
         api_key = config['twitter']['api_key']
@@ -26,17 +26,21 @@ class Tweet:
 
         @param name: Name of the twitter user
         '''
-        tweets = self.api.user_timeline(screen_name =name, count=1, tweet_mode='extended')
-        tweet = tweets[0]
+        try:
+            tweets = self.api.user_timeline(screen_name =name, count=1, tweet_mode='extended')
+            tweet = tweets[0]
 
-        msg = "\n".join(["@" + tweet.user.screen_name + ":", tweet.full_text])
-        url = None
-        if 'https' in msg:
-            msg = msg[0 : msg.index('https')-1]
-            if 'media' in tweet.entities:
-                for image in tweet.entities['media']:
-                    url = (image['media_url'])
-        return [msg, url]
+            msg = "\n".join(["@" + tweet.user.screen_name + ":", tweet.full_text])
+            url = None
+            if 'https' in msg:
+                msg = msg[0 : msg.index('https')-1]
+                if 'media' in tweet.entities:
+                    for image in tweet.entities['media']:
+                        url = (image['media_url'])
+            return [msg, url]
+        except: 
+            return [None, None]
+        
 
 
 

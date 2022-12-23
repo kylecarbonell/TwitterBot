@@ -23,13 +23,15 @@ class Message:
     def __init__(self) -> None:
         self.tweet = Tweet()
         self.reminder = Reminder()
+
         config = configparser.ConfigParser()
-        config.read('config.ini')
+        config.read('Data/config.ini')
 
         self.username = config['message']['user']
         self.pw = config['message']['pw']
 
-        with open('Users.json') as file:
+        self.users_file = 'Data/Users.json'
+        with open(self.users_file) as file:
             self.users = json.load(file)
             self.recipients = []
             for key in self.users['Users']:
@@ -93,6 +95,9 @@ class Message:
         @param user: Twitter username the tweet is being searched for
         '''
         text = self.tweet.get_tweet(user)
+        if(text[0] == None):
+            self.send_message("@ERROR:\nUSER NOT FOUND!", to)
+            return
         self.send_message(text[0], to)
         if(text[1] != None):
             self.send_file(text[1], to, 'image', 'jpeg')
@@ -126,18 +131,18 @@ class Message:
                     sender = message.get("From")
 
                     mail.close()
-                    if(any(word in body for word in ["Subscribe", "subscribe"])):
+                    if(any(word in body for word in ["@Subscribe", "@subscribe"])):
                         return [body, sender]
                     elif(sender in self.recipients):
                         return [body, sender]
                     else:
-                        self.send_message("Please type 'Subscribe' to subscribe to Alert Bot followed by your NAME and your EMAIL (optional) on seperate lines", sender)
+                        self.send_message("Please type '@Subscribe' to subscribe to Alert Bot followed by your NAME on a seperate lines", sender)
                         return [None, None]
 
         #Deletes messages
         _, delete = mail.search(None, 'SEEN')
         deleteMessage = delete[0].split(b' ')
-
+        print(delete)
         if(deleteMessage[0] != b''):
             mail.store(deleteMessage[0], "+FLAGS", "\\Deleted")
             mail.expunge()
@@ -156,9 +161,8 @@ class Message:
         @param phone_number: This is the users phone number
         @param email: This is the users email
         '''
-        new_user = {'name' : name, 'email' : email, "reminders" : [] }
-        self.send_message("Creating your account...", phone_number)
-        with open('Users.json', 'r+') as js:
+        new_user = {'name' : name, 'email' : email}
+        with open(self.users_file, 'r+') as js:
             file = json.load(js)
             file['Users'][phone_number] = new_user
             js.seek(0)
@@ -177,28 +181,46 @@ class Message:
 
         #Sends help text box
         if any(word in command for word in ['Help', 'help']):
-            options = "1. To get the current news \n2. To get a random Tweet\n3. Type @ and a twitter username to get their tweet"
+            options =   "@Help:\n" \
+                        "1. Type '@News' to get the current news\n\n" \
+                        "2. Type @ and a twitter username to get their recent tweet\n\n" \
+                        "3. Type '@Reminder' followed by your reminder and the time (03:20 am/pm) on 2 separate lines.\n"\
+                        "\n---------------------------------\n"\
+                        "4. Type 'GET reminders' to get all your reminders"
             self.send_message(options, to)
         #Sends news from @cnn
-        elif any(word in command for word in ['News', 'news']):
+        elif any(word in command for word in ['@News', '@news']):
             self.tweetMsg(to, "CNN")
+        #Adds user data onto Users.json
+        elif any(word in command for word in ['@Subscribe', '@subscribe']):
+            if('\n' in command):
+                info = command.split("\n")
+                info.append("")
+                self.add_user(info[1], to, info[2])
+            else:
+                self.send_message("@ERROR:\nCommand does not contain your name or your email!")
+                self.run_command('help', to)
+        #Gets all users reminders
+        elif any(word in command for word in ['reminder', 'Reminder', 'reminders', 'Reminders']) and any(word in command for word in ["GET", "Get", "get"]):
+            self.send_message("GET reminders\n" + "".join(self.reminder.get_user_reminders(to)).strip(), to)
+        #Adds a reminder to User.json
+        elif any(word in command for word in ["@reminder", "@Reminder"]):
+            if('\n' in command):
+                info = command.split("\n")
+                self.reminder.add_reminder(info[1], info[2], to)
+                self.send_message("Reminder created!", to)
+            else:
+                self.send_message("@ERROR:\nCommand does not contain the reminder or the time!")
+                self.run_command('help', to)
         #Sends latest tweet from the whoever the user @
         elif any(word in command for word in ['@']):
             self.tweetMsg(to, command.partition('@')[2])
-        
-        elif any(word in command for word in ['Subscribe', 'subscribe']) and all(word in command for word in ['\n']):
-            info = command.split("\n")
-            info.append("")
-            self.add_user(info[1], to, info[2])
-        elif any(word in command for word in ["reminder", "Reminder"]):
-            self.send_message("Adding reminder...", to)
-            info = command.split("\n")
-            self.reminder.add_reminder(info[1], info[2], to)
-            self.send_message("Reminder created!", to)
         else:
             self.send_message("Alert bot does not understand this command", to)
+            self.run_command('help', to)
 
     def run_response(self):
+        print("Response bot starting...")
         while self.running:
             time.sleep(3)
             res = self.getResponse()
@@ -208,6 +230,7 @@ class Message:
                 self.run_command(message, to)
 
     def run_reminders(self):
+        print("Reminder bot starting...")
         while self.running:
             #List of tuples of [Reminder list, phone number]
             reminders = self.reminder.send_reminder()
