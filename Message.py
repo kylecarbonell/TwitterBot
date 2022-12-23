@@ -136,7 +136,6 @@ class Message:
 
         #Deletes messages
         _, delete = mail.search(None, 'SEEN')
-        print(delete)
         deleteMessage = delete[0].split(b' ')
 
         if(deleteMessage[0] != b''):
@@ -210,10 +209,8 @@ class Message:
 
     def run_reminders(self):
         while self.running:
-            print("Sending all reminders")
             #List of tuples of [Reminder list, phone number]
             reminders = self.reminder.send_reminder()
-            print(reminders)
             #Loops for each tuple(reminder = [reminder, phone number])
             for reminder in reminders:
                 self.send_message("@Reminder:\n" + reminder[0], reminder[1])
