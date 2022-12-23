@@ -2,13 +2,10 @@
     "Users": {
         "4088588974@mms.att.net": {
             "name": "Kyle Carbonell",
-            "email": "",
-            "reminders": [
-                {
-                    "reminder": "working p2",
-                    "time": "23:18"
-                }
-            ]
+            "email": ""
         }
-    }
+    },
+    "Reminders": [
+        
+    ]
 }

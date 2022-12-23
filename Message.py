@@ -175,16 +175,18 @@ class Message:
         @param command: A message sent by the user
         @param to: Address message is being sent to
         '''
+
+        #Sends help text box
         if any(word in command for word in ['Help', 'help']):
             options = "1. To get the current news \n2. To get a random Tweet\n3. Type @ and a twitter username to get their tweet"
             self.send_message(options, to)
+        #Sends news from @cnn
         elif any(word in command for word in ['News', 'news']):
             self.tweetMsg(to, "CNN")
+        #Sends latest tweet from the whoever the user @
         elif any(word in command for word in ['@']):
             self.tweetMsg(to, command.partition('@')[2])
-        elif any(word in command for word in ['Exit', 'Quit', 'exit', 'quit']):
-            self.send_message("Thank you for using Alert Bot! See you next time!", to)
-            self.running = False
+        
         elif any(word in command for word in ['Subscribe', 'subscribe']) and all(word in command for word in ['\n']):
             info = command.split("\n")
             info.append("")
@@ -210,9 +212,9 @@ class Message:
         while self.running:
             print("Sending all reminders")
             #List of tuples of [Reminder list, phone number]
-            reminders = self.reminder.send_reminder(self.recipients)
+            reminders = self.reminder.send_reminder()
             print(reminders)
             #Loops for each tuple(reminder = [reminder, phone number])
             for reminder in reminders:
-                self.send_message(reminder[0], reminder[1])
+                self.send_message("@Reminder:\n" + reminder[0], reminder[1])
             time.sleep(60)
