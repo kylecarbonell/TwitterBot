@@ -1,6 +1,7 @@
 import multiprocessing as mp
 from Message import Message
 import time
+import mysql.connector
 
 if __name__ == "__main__":
     msg = Message()

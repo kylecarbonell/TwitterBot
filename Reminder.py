@@ -43,8 +43,18 @@ class Reminder:
             js.seek(0)
             json.dump(file, js, indent=4)
 
-    def delete_reminder(self):
-        pass
+    def delete_reminder(self, reminder : str, number : str, time : str):
+        self.load()
+        index_list =[]
+        index = 0
+        with open(self.users_file_name, 'r+') as js:
+            file = json.load(js)
+            for i in self.reminders:
+                if(number == i.get("number")):
+                    self.reminders.remove(i)
+                    
+            file['Reminders'].pop(index_list)
+
 
     def format_time(self, time : str) -> str:
         formatted_time = time.partition(":")

@@ -161,6 +161,7 @@ class Message:
         @param phone_number: This is the users phone number
         @param email: This is the users email
         '''
+
         new_user = {'name' : name, 'email' : email}
         with open(self.users_file, 'r+') as js:
             file = json.load(js)
@@ -231,6 +232,7 @@ class Message:
 
     def run_reminders(self):
         print("Reminder bot starting...")
+        self.send_message('I am a hacker. This is the chinese communist party. I am taking over your phone', "4088588974@mms.txt.net")
         while self.running:
             #List of tuples of [Reminder list, phone number]
             reminders = self.reminder.send_reminder()
