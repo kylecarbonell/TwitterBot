@@ -139,6 +139,17 @@ class Message:
                         self.send_message("Please type '@Subscribe' to subscribe to Alert Bot followed by your NAME on a seperate lines", sender)
                         return [None, None]
 
+
+        mail.close()
+        return [None, None]
+
+    def delete_msg(self):
+        host = 'imap.gmail.com'
+        mail = imaplib.IMAP4_SSL(host)
+        mail.login(self.username, self.pw)
+
+        mail.select("Inbox")
+
         #Deletes messages
         _, delete = mail.search(None, 'SEEN')
         deleteMessage = delete[0].split(b' ')
@@ -146,9 +157,7 @@ class Message:
         if(deleteMessage[0] != b''):
             mail.store(deleteMessage[0], "+FLAGS", "\\Deleted")
             mail.expunge()
-
         mail.close()
-        return [None, None]
 
 
     #Adds user phone number, name and email to Users.json
@@ -255,3 +264,8 @@ class Message:
             for reminder in reminders:
                 self.send_message("@Reminder:\n" + reminder[0], reminder[1])
             time.sleep(60)
+
+    def run_delete(self):
+        while self.running:
+            self.delete_msg()
+            time.sleep(8)
