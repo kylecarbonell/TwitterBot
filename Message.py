@@ -142,7 +142,7 @@ class Message:
         #Deletes messages
         _, delete = mail.search(None, 'SEEN')
         deleteMessage = delete[0].split(b' ')
-        print(delete)
+        #print(delete)
         if(deleteMessage[0] != b''):
             mail.store(deleteMessage[0], "+FLAGS", "\\Deleted")
             mail.expunge()
@@ -186,8 +186,10 @@ class Message:
                         "1. Type '@News' to get the current news\n\n" \
                         "2. Type @ and a twitter username to get their recent tweet\n\n" \
                         "3. Type '@Reminder' followed by your reminder and the time (03:20 am/pm) on 2 separate lines.\n\n"\
+                        "4. Type '@Clear' to remove all your reminders\n\n"\
+                        "5. Type '@Delete' followed by the number of the reminder you want to delete\n\n"\
                         "---------------------------------\n\n"\
-                        "4. Type 'GET reminders' to get all your reminders"
+                        "6. Type 'GET reminders' to get all your reminders"
             self.send_message(options, to)
         #Sends news from @cnn
         elif any(word in command for word in ['@News', '@news']):
@@ -213,6 +215,19 @@ class Message:
             else:
                 self.send_message("@ERROR:\nCommand does not contain the reminder or the time!", to)
                 self.run_command('help', to)
+        #Deletes all reminders
+        elif any(word in command for word in ["@clear", "@Clear"]):
+            self.reminder.clear_all(to)
+            self.send_message("All reminders cleared!", to)
+        #Deletes specific reminder
+        elif any(word in command for word in ['@delete', '@Delete']):
+            if('\n' in command):
+                info = command.split('\n')
+                self.reminder.delete_reminder(to, int(info[1]))
+                self.send_message("Deleteing reminder...", to)
+                self.run_command("GET reminders", to)
+            else:
+                self.send_message("@ERROR:\nCommand does not contain a reminder or a time to delete", to)
         #Sends latest tweet from the whoever the user @
         elif any(word in command for word in ['@']):
             self.tweetMsg(to, command.partition('@')[2])

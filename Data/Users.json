@@ -4,17 +4,6 @@
             "name": "Kyle Carbonell",
             "email": ""
         }
-    },
-    "Reminders": [
-        {
-            "phone_number": "4088588974@mms.att.net",
-            "reminder": "Go to daves",
-            "time": "11:05"
-        },
-        {
-            "phone_number": "4088588974@mms.att.net",
-            "reminder": "Go to daves",
-            "time": "13:00"
-        }
-    ]
+    }
+    
 }
