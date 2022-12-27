@@ -1,0 +1,24 @@
+{
+    "Reminders": [
+        {
+            "phone_number": "4088588904@mms.att.net",
+            "reminder": "eat dinner",
+            "time": "19:00"
+        },
+        {
+            "phone_number": "4088588994@mms.att.net",
+            "reminder": "eat dinner",
+            "time": "19:00"
+        },
+        {
+            "phone_number": "4088588979@mms.att.net",
+            "reminder": "eat dinner",
+            "time": "19:00"
+        },
+        {
+            "phone_number": "4088588974@mms.att.net",
+            "reminder": "eat dinner",
+            "time": "19:31"
+        }
+    ]
+}
