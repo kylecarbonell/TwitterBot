@@ -1,5 +1,5 @@
-from Twitter import Tweet
-from Reminder import Reminder
+from Function.Twitter import Tweet
+from Function.Reminder import Reminder
 
 import smtplib
 import email

@@ -1,5 +1,5 @@
 import multiprocessing as mp
-from Message import Message
+from Function.Message import Message
 import time
 
 if __name__ == "__main__":
